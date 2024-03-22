@@ -14,12 +14,12 @@ def select_directory():
     return directory
 
 def copy_tags_from_xmp(xmp_path, image_path):
-    subprocess.run(['exiftool', '-tagsfromfile', xmp_path, '-gps:all', image_path])
+    subprocess.run(['exiftool', '-tagsfromfile', xmp_path, '-location:all', '-@', 'xmp2exif.args', image_path])
 
 def process_directory(dir_path):
     xmp_files = glob.glob(os.path.join(dir_path, '*.xmp'))
     for xmp_path in tqdm(xmp_files, desc="Processing files"):
-        for ext in ['arw', 'jpg', 'jpeg']:
+        for ext in ['jpg', 'jpeg']:
             image_path = xmp_path.rsplit('.', 1)[0] + '.' + ext
             if os.path.exists(image_path):
                 copy_tags_from_xmp(xmp_path, image_path)
